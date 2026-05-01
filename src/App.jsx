@@ -54,7 +54,7 @@ export default function App() {
 
   function handleReset() {
     timer.reset()
-    yt.pause()
+    yt.stop()
   }
 
   return (
@@ -91,7 +91,6 @@ export default function App() {
 
         <PhaseControls
           status={timer.status}
-          phase={timer.phase}
           soundOn={soundOn}
           onMainAction={timer.mainAction}
           onSoundToggle={() => setSoundOn(s => !s)}

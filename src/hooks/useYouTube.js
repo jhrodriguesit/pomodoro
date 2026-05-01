@@ -46,6 +46,12 @@ export function useYouTube(containerRef) {
     playerRef.current?.pauseVideo()
   }
 
+  function stop() {
+    intentRef.current = false
+    playerRef.current?.pauseVideo()
+    playerRef.current?.seekTo(0, true)
+  }
+
   function switchVideo(videoId, autoPlay = false) {
     intentRef.current = autoPlay
     if (!playerRef.current) return
@@ -56,5 +62,5 @@ export function useYouTube(containerRef) {
     }
   }
 
-  return { hasPlayer, initPlayer, play, pause, switchVideo }
+  return { hasPlayer, initPlayer, play, pause, stop, switchVideo }
 }
