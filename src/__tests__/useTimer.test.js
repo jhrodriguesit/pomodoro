@@ -98,13 +98,14 @@ describe('useTimer', () => {
 
   it('transitions running focus (cycleIndex = 3) → done when timeLeft hits 0', () => {
     const { result } = renderHook(() => useTimer())
+    act(() => result.current.mainAction()) // start first focus (idle → running, cycleIndex=0)
     for (let i = 0; i < 3; i++) {
-      act(() => result.current.mainAction())
-      act(() => { vi.advanceTimersByTime(FOCUS_DURATION * 1000) })
-      act(() => result.current.mainAction())
-      act(() => { vi.advanceTimersByTime(BREAK_DURATION * 1000) })
-      act(() => result.current.mainAction())
+      act(() => { vi.advanceTimersByTime(FOCUS_DURATION * 1000) }) // focus ends → waiting_break
+      act(() => result.current.mainAction())                        // start break
+      act(() => { vi.advanceTimersByTime(BREAK_DURATION * 1000) }) // break ends → waiting_focus
+      act(() => result.current.mainAction())                        // start next focus (cycleIndex++)
     }
+    // Now at cycleIndex=3 (4th focus), complete it
     act(() => { vi.advanceTimersByTime(FOCUS_DURATION * 1000) })
     expect(result.current.status).toBe('done')
     expect(result.current.cycleIndex).toBe(3)

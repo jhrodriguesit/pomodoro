@@ -42,7 +42,7 @@ function handleTick(state) {
   if (state.status !== 'running') return state
   if (state.timeLeft > 1) return { ...state, timeLeft: state.timeLeft - 1 }
   if (state.phase === 'focus') {
-    if (state.cycleIndex >= 2) return { ...state, timeLeft: 0, status: 'done', cycleIndex: state.cycleIndex + 1 }
+    if (state.cycleIndex >= 3) return { ...state, timeLeft: 0, status: 'done' }
     return { ...state, timeLeft: 0, status: 'waiting_break' }
   }
   return { ...state, timeLeft: 0, status: 'waiting_focus' }
