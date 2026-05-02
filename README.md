@@ -2,6 +2,8 @@
 
 A minimal, warm-themed Pomodoro timer for the browser. Focus in cycles, take breaks, optionally play lo-fi music in the background, and end your session with a long break.
 
+Checkout it live: https://jhdev-pomodoro.vercel.app/
+
 ## Features
 
 - **Configurable cycles** — set focus duration, break duration, long-break duration, and number of cycles via a settings modal (gear icon, top right).
