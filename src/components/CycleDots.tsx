@@ -18,12 +18,13 @@ interface CycleDotsProps {
   cycleIndex: number
   phase: Phase
   status: TimerStatus
+  totalCycles: number
 }
 
-export function CycleDots({ cycleIndex, phase, status }: CycleDotsProps) {
+export function CycleDots({ cycleIndex, phase, status, totalCycles }: CycleDotsProps) {
   return (
     <div className="flex items-center gap-3">
-      {[0, 1, 2, 3].map(i => {
+      {Array.from({ length: totalCycles }, (_, i) => {
         const state = getDotState(i, cycleIndex, phase, status)
         return (
           <span

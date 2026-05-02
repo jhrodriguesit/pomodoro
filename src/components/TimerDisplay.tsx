@@ -6,7 +6,7 @@ export function formatTime(seconds: number): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
-const PHASE_LABELS: Record<Phase, string> = { focus: 'Focus', break: 'Break' }
+const PHASE_LABELS: Record<Phase, string> = { focus: 'Focus', break: 'Break', long_break: 'Long break' }
 
 interface TimerDisplayProps {
   timeLeft: number
