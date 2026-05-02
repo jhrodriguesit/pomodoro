@@ -1,45 +1,52 @@
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react'
-import type { TimerStatus } from '../types'
+import { Volume2, VolumeX } from "lucide-react";
+import type { TimerStatus } from "../types";
 
 interface PhaseControlsProps {
-  status: TimerStatus
-  musicPlaying: boolean
-  showGenrePrompt: boolean
-  onMainAction: () => void
-  onSoundToggle: () => void
-  onReset: () => void
+  status: TimerStatus;
+  musicPlaying: boolean;
+  showGenrePrompt: boolean;
+  onMainAction: () => void;
+  onSoundToggle: () => void;
+  onReset: () => void;
 }
 
 const MAIN_BUTTON_CONFIG = {
-  idle:          { label: 'Start Focus',     ariaLabel: 'Start Focus',      disabled: false },
-  running:       { label: null,              ariaLabel: 'Pause',            disabled: false },
-  paused:        { label: null,              ariaLabel: 'Resume',           disabled: false },
-  waiting_break: { label: 'Start Break',     ariaLabel: 'Start Break',      disabled: false },
-  waiting_focus: { label: 'Start Focus',     ariaLabel: 'Start Focus',      disabled: false },
-  done:          { label: null,              ariaLabel: 'Session complete',  disabled: true  },
-} as const satisfies Record<TimerStatus, { label: string | null; ariaLabel: string; disabled: boolean }>
+  idle: { label: "Start Focus", ariaLabel: "Start Focus", disabled: false },
+  running: { label: "Pause", ariaLabel: "Pause", disabled: false },
+  paused: { label: "Resume", ariaLabel: "Resume", disabled: false },
+  waiting_break: {
+    label: "Start Break",
+    ariaLabel: "Start Break",
+    disabled: false,
+  },
+  waiting_focus: {
+    label: "Start Focus",
+    ariaLabel: "Start Focus",
+    disabled: false,
+  },
+  done: {
+    label: "Session complete",
+    ariaLabel: "Session complete",
+    disabled: true,
+  },
+} as const satisfies Record<
+  TimerStatus,
+  { label: string | null; ariaLabel: string; disabled: boolean }
+>;
 
 interface MainButtonContentProps {
-  status: TimerStatus
+  status: TimerStatus;
 }
 
-function MainButtonContent({ status }: MainButtonContentProps) {
-  if (status === 'running') return <Pause size={20} />
-  if (status === 'paused')  return <Play size={20} />
-  if (status === 'done')    return <span className="text-sm">—</span>
-  if (status === 'idle') {
-    return (
-      <span className="flex items-center gap-2">
-        <Play size={16} />
-        {MAIN_BUTTON_CONFIG.idle.label}
-      </span>
-    )
-  }
-  return <span>{MAIN_BUTTON_CONFIG[status].label}</span>
-}
-
-export function PhaseControls({ status, musicPlaying, showGenrePrompt, onMainAction, onSoundToggle, onReset }: PhaseControlsProps) {
-  const config = MAIN_BUTTON_CONFIG[status]
+export function PhaseControls({
+  status,
+  musicPlaying,
+  showGenrePrompt,
+  onMainAction,
+  onSoundToggle,
+  onReset,
+}: PhaseControlsProps) {
+  const config = MAIN_BUTTON_CONFIG[status];
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -47,13 +54,13 @@ export function PhaseControls({ status, musicPlaying, showGenrePrompt, onMainAct
         <div className="relative">
           <button
             onClick={onSoundToggle}
-            aria-label={musicPlaying ? 'Pause music' : 'Play music'}
+            aria-label={musicPlaying ? "Pause music" : "Play music"}
             className={[
-              'p-2 rounded-full transition-colors',
+              "p-2 rounded-full transition-colors",
               musicPlaying
-                ? 'bg-warm-accent text-white'
-                : 'border border-warm-accent text-warm-accent dark:border-warm-accent dark:text-warm-accent',
-            ].join(' ')}
+                ? "bg-warm-accent text-white"
+                : "border border-warm-accent text-warm-accent dark:border-warm-accent dark:text-warm-accent",
+            ].join(" ")}
           >
             {musicPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
           </button>
@@ -70,17 +77,17 @@ export function PhaseControls({ status, musicPlaying, showGenrePrompt, onMainAct
           disabled={config.disabled}
           aria-label={config.ariaLabel}
           className={[
-            'min-w-[9rem] h-11 px-6 rounded-full font-sans font-medium text-sm transition-colors',
+            "h-11 px-6 rounded-full font-sans font-medium text-sm transition-colors",
             config.disabled
-              ? 'bg-warm-border dark:bg-warm-dark-border text-warm-muted dark:text-warm-dark-muted cursor-not-allowed'
-              : 'bg-warm-accent text-white hover:bg-warm-text dark:hover:bg-warm-dark-text',
-          ].join(' ')}
+              ? "bg-warm-border dark:bg-warm-dark-border text-warm-muted dark:text-warm-dark-muted cursor-not-allowed"
+              : "bg-warm-accent text-white hover:bg-warm-text dark:hover:bg-warm-dark-text",
+          ].join(" ")}
         >
-          <MainButtonContent status={status} />
+          <span>{MAIN_BUTTON_CONFIG[status].label}</span>
         </button>
       </div>
 
-      {status !== 'idle' && (
+      {status !== "idle" && (
         <button
           onClick={onReset}
           aria-label="Reset session"
@@ -90,5 +97,5 @@ export function PhaseControls({ status, musicPlaying, showGenrePrompt, onMainAct
         </button>
       )}
     </div>
-  )
+  );
 }
