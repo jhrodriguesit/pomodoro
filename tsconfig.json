@@ -9,8 +9,7 @@
     "allowJs": true,
     "checkJs": false,
     "noEmit": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
   "include": ["src", "vite.config.ts"]
