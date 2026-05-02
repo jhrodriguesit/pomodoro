@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import type { GenreKey } from './types'
 import { useTimer } from './hooks/useTimer'
 import { useTheme } from './hooks/useTheme'
 import { useYouTube } from './hooks/useYouTube'
@@ -12,9 +13,9 @@ import { PhaseControls } from './components/PhaseControls'
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
   const timer = useTimer()
-  const ytContainerRef = useRef(null)
+  const ytContainerRef = useRef<HTMLDivElement | null>(null)
   const yt = useYouTube(ytContainerRef)
-  const [selectedGenre, setSelectedGenre] = useState(null)
+  const [selectedGenre, setSelectedGenre] = useState<GenreKey | null>(null)
   const [soundOn, setSoundOn] = useState(true)
 
   const shouldPlayMusic =
@@ -38,7 +39,7 @@ export default function App() {
   }, [shouldPlayMusic])
 
   // Switch video when genre changes mid-session (without resetting the timer)
-  const prevGenreRef = useRef(selectedGenre)
+  const prevGenreRef = useRef<GenreKey | null>(selectedGenre)
   useEffect(() => {
     const prev = prevGenreRef.current
     prevGenreRef.current = selectedGenre
