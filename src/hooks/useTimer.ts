@@ -1,14 +1,27 @@
 import { useReducer, useEffect } from 'react'
 import { FOCUS_DURATION, BREAK_DURATION } from '../constants'
+import type { Phase, TimerStatus } from '../types'
 
-const initialState = {
+interface TimerState {
+  phase: Phase;
+  cycleIndex: number;
+  timeLeft: number;
+  status: TimerStatus;
+}
+
+type TimerAction =
+  | { type: 'MAIN_ACTION' }
+  | { type: 'TICK' }
+  | { type: 'RESET' };
+
+const initialState: TimerState = {
   phase: 'focus',
   cycleIndex: 0,
   timeLeft: FOCUS_DURATION,
   status: 'idle',
 }
 
-function timerReducer(state, action) {
+function timerReducer(state: TimerState, action: TimerAction): TimerState {
   switch (action.type) {
     case 'MAIN_ACTION':
       return handleMainAction(state)
@@ -21,7 +34,7 @@ function timerReducer(state, action) {
   }
 }
 
-function handleMainAction(state) {
+function handleMainAction(state: TimerState): TimerState {
   switch (state.status) {
     case 'idle':
       return { ...state, status: 'running' }
@@ -38,7 +51,7 @@ function handleMainAction(state) {
   }
 }
 
-function handleTick(state) {
+function handleTick(state: TimerState): TimerState {
   if (state.status !== 'running') return state
   if (state.timeLeft > 1) return { ...state, timeLeft: state.timeLeft - 1 }
   if (state.phase === 'focus') {
@@ -48,7 +61,14 @@ function handleTick(state) {
   return { ...state, timeLeft: 0, status: 'waiting_focus' }
 }
 
-export function useTimer() {
+export function useTimer(): {
+  phase: Phase;
+  cycleIndex: number;
+  timeLeft: number;
+  status: TimerStatus;
+  mainAction: () => void;
+  reset: () => void;
+} {
   const [state, dispatch] = useReducer(timerReducer, initialState)
 
   useEffect(() => {

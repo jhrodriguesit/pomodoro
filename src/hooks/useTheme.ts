@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export function useTheme() {
+export function useTheme(): { isDark: boolean; toggleTheme: () => void } {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark')
 
   useEffect(() => {
