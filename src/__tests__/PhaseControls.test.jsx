@@ -5,7 +5,6 @@ import { PhaseControls } from '../components/PhaseControls'
 
 const defaultProps = {
   status: 'idle',
-  phase: 'focus',
   soundOn: true,
   onMainAction: () => {},
   onSoundToggle: () => {},
