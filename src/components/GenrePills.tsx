@@ -1,6 +1,12 @@
 import { GENRES, GENRE_ORDER } from '../constants'
+import type { GenreKey } from '../types'
 
-export function GenrePills({ selectedGenre, onSelect }) {
+interface GenrePillsProps {
+  selectedGenre: GenreKey | null
+  onSelect: (genre: GenreKey | null) => void
+}
+
+export function GenrePills({ selectedGenre, onSelect }: GenrePillsProps) {
   return (
     <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Music genre">
       {GENRE_ORDER.map(id => {
