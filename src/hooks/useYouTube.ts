@@ -25,16 +25,17 @@ interface YTPlayerOptions {
 
 declare global {
   interface Window {
-    YT: {
+    YT?: {
       Player: new (container: HTMLElement, options: YTPlayerOptions) => YTPlayer;
     };
-    onYouTubeIframeAPIReady: () => void;
+    onYouTubeIframeAPIReady?: () => void;
   }
 }
 
 import { useRef, useState } from 'react'
+import type { RefObject } from 'react'
 
-export function useYouTube(containerRef: React.RefObject<HTMLElement | null>) {
+export function useYouTube(containerRef: RefObject<HTMLElement | null>) {
   const playerRef = useRef<YTPlayer | null>(null)
   const [hasPlayer, setHasPlayer] = useState(false)
   const intentRef = useRef<boolean>(false)
@@ -52,7 +53,7 @@ export function useYouTube(containerRef: React.RefObject<HTMLElement | null>) {
 
     function createPlayer() {
       if (!containerRef.current) return
-      playerRef.current = new window.YT.Player(containerRef.current, {
+      playerRef.current = new window.YT!.Player(containerRef.current, {
         videoId,
         playerVars: { autoplay: 0, controls: 0, rel: 0, playsinline: 1 },
         events: {
