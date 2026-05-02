@@ -1,6 +1,12 @@
 import { renderHook, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useTheme } from '../hooks/useTheme'
+import { LS_SETTINGS_KEY } from '../constants'
+
+function getStoredTheme(): string | undefined {
+  const raw = localStorage.getItem(LS_SETTINGS_KEY)
+  return raw ? JSON.parse(raw)?.theme : undefined
+}
 
 describe('useTheme', () => {
   beforeEach(() => {
@@ -14,8 +20,8 @@ describe('useTheme', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
-  it('reads dark preference from localStorage on init', () => {
-    localStorage.setItem('theme', 'dark')
+  it('reads dark preference from tomo-settings on init', () => {
+    localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify({ theme: 'dark' }))
     const { result } = renderHook(() => useTheme())
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
@@ -26,15 +32,15 @@ describe('useTheme', () => {
     act(() => result.current.toggleTheme())
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(localStorage.getItem('theme')).toBe('dark')
+    expect(getStoredTheme()).toBe('dark')
   })
 
   it('toggleTheme switches back to light and removes dark class', () => {
-    localStorage.setItem('theme', 'dark')
+    localStorage.setItem(LS_SETTINGS_KEY, JSON.stringify({ theme: 'dark' }))
     const { result } = renderHook(() => useTheme())
     act(() => result.current.toggleTheme())
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
-    expect(localStorage.getItem('theme')).toBe('light')
+    expect(getStoredTheme()).toBe('light')
   })
 })
