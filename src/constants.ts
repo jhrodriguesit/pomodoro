@@ -1,4 +1,4 @@
-import type { GenreKey } from './types'
+import type { GenreKey, Settings } from './types'
 
 export const GENRES = {
   reggae:    { label: 'Reggae',     videoId: 'zODPkMZ2pvw' },
@@ -10,6 +10,22 @@ export const GENRES = {
 
 export const GENRE_ORDER = ['reggae', 'pop', 'classical', 'jazz', 'bossanova'] as const satisfies GenreKey[]
 
-export const FOCUS_DURATION = 25 * 60   // 1500 seconds
-export const BREAK_DURATION = 5 * 60    // 300 seconds
-export const TOTAL_CYCLES = 4
+export const DEFAULT_SETTINGS: Settings = {
+  focusSeconds: 25 * 60,
+  breakSeconds: 5 * 60,
+  longBreakSeconds: 15 * 60,
+  totalCycles: 4,
+  pauseMusicOnPhaseEnd: true,
+  chimeOnPhaseEnd: true,
+}
+
+export const LS_SETTINGS_KEY = 'tomo-settings'
+
+export const FOCUS_MIN_MIN = 1
+export const FOCUS_MIN_MAX = 120
+export const BREAK_MIN_MIN = 1
+export const BREAK_MIN_MAX = 60
+export const LONG_BREAK_MIN_MIN = 1
+export const LONG_BREAK_MIN_MAX = 60
+export const CYCLES_MIN = 1
+export const CYCLES_MAX = 12

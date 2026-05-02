@@ -4,8 +4,11 @@ import { useTimer } from './hooks/useTimer'
 import { useTheme } from './hooks/useTheme'
 import { useYouTube } from './hooks/useYouTube'
 import { useNotifications } from './hooks/useNotifications'
+import { useSettings } from './hooks/useSettings'
 import { GENRES } from './constants'
 import { ThemeToggle } from './components/ThemeToggle'
+import { SettingsButton } from './components/SettingsButton'
+import { SettingsModal } from './components/SettingsModal'
 import { GenrePills } from './components/GenrePills'
 import { CycleDots } from './components/CycleDots'
 import { TimerDisplay } from './components/TimerDisplay'
@@ -13,13 +16,15 @@ import { PhaseControls } from './components/PhaseControls'
 
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
-  const timer = useTimer()
-  useNotifications(timer.status)
+  const { settings, updateSettings } = useSettings()
+  const timer = useTimer(settings)
+  useNotifications(timer.status, settings.chimeOnPhaseEnd)
   const ytContainerRef = useRef<HTMLDivElement | null>(null)
   const yt = useYouTube(ytContainerRef)
   const [selectedGenre, setSelectedGenre] = useState<GenreKey | null>(null)
   const [musicPlaying, setMusicPlaying] = useState(false)
   const [showGenrePrompt, setShowGenrePrompt] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Sync YouTube playback when musicPlaying or selectedGenre changes
   useEffect(() => {
@@ -50,12 +55,18 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGenre])
 
-  // Pause music when a phase ends
+  // Pause music when a phase ends (gated by user setting)
   useEffect(() => {
-    if (timer.status === 'waiting_break' || timer.status === 'waiting_focus' || timer.status === 'done') {
+    if (!settings.pauseMusicOnPhaseEnd) return
+    if (
+      timer.status === 'waiting_break' ||
+      timer.status === 'waiting_focus' ||
+      timer.status === 'waiting_long_break' ||
+      timer.status === 'done'
+    ) {
       setMusicPlaying(false)
     }
-  }, [timer.status])
+  }, [timer.status, settings.pauseMusicOnPhaseEnd])
 
   // Auto-dismiss the genre prompt after 2.5s
   useEffect(() => {
@@ -90,7 +101,8 @@ export default function App() {
         className="absolute -left-[9999px] w-px h-px overflow-hidden"
       />
 
-      <header className="flex justify-end p-4 sm:p-6">
+      <header className="flex justify-end items-center gap-1 p-4 sm:p-6">
+        <SettingsButton onClick={() => setSettingsOpen(true)} />
         <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       </header>
 
@@ -115,6 +127,7 @@ export default function App() {
           cycleIndex={timer.cycleIndex}
           phase={timer.phase}
           status={timer.status}
+          totalCycles={settings.totalCycles}
         />
 
         <PhaseControls
@@ -126,6 +139,13 @@ export default function App() {
           onReset={handleReset}
         />
       </main>
+
+      <SettingsModal
+        open={settingsOpen}
+        settings={settings}
+        onSave={updateSettings}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   )
 }

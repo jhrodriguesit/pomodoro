@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react'
 import type { TimerStatus } from '../types'
 
 const MESSAGES: Partial<Record<TimerStatus, { title: string; body: string }>> = {
-  waiting_break: { title: 'Focus complete!', body: 'Time for a break.' },
-  waiting_focus: { title: 'Break over!', body: 'Ready to focus?' },
-  done:          { title: 'Session complete!', body: 'Great work — all 4 cycles done.' },
+  waiting_break:      { title: 'Focus complete!',       body: 'Time for a break.' },
+  waiting_focus:      { title: 'Break over!',           body: 'Ready to focus?' },
+  waiting_long_break: { title: 'Final focus done!',     body: 'Time for a long break.' },
+  done:               { title: 'Session complete!',     body: 'Great work — all cycles done.' },
 }
 
 function playChime() {
@@ -32,7 +33,7 @@ function playChime() {
   }
 }
 
-export function useNotifications(status: TimerStatus) {
+export function useNotifications(status: TimerStatus, chimeEnabled: boolean) {
   const lastNotifiedStatus = useRef<TimerStatus | null>(null)
 
   useEffect(() => {
@@ -46,12 +47,12 @@ export function useNotifications(status: TimerStatus) {
 
     lastNotifiedStatus.current = status
 
-    playChime()
+    if (chimeEnabled) playChime()
 
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
       const n = new Notification(message.title, { body: message.body, silent: true })
       const timer = setTimeout(() => n.close(), 6000)
       return () => clearTimeout(timer)
     }
-  }, [status])
+  }, [status, chimeEnabled])
 }

@@ -24,6 +24,11 @@ const MAIN_BUTTON_CONFIG = {
     ariaLabel: "Start Focus",
     disabled: false,
   },
+  waiting_long_break: {
+    label: "Start Long Break",
+    ariaLabel: "Start Long Break",
+    disabled: false,
+  },
   done: {
     label: "Session complete",
     ariaLabel: "Session complete",

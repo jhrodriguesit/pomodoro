@@ -39,6 +39,11 @@ describe('PhaseControls', () => {
     expect(screen.getByRole('button', { name: /start focus/i })).toBeInTheDocument()
   })
 
+  it('shows Start Long Break when status is waiting_long_break', () => {
+    render(<PhaseControls {...defaultProps} status="waiting_long_break" />)
+    expect(screen.getByRole('button', { name: /start long break/i })).toBeInTheDocument()
+  })
+
   it('main button is disabled when status is done', () => {
     render(<PhaseControls {...defaultProps} status="done" />)
     expect(screen.getByRole('button', { name: /session complete/i })).toBeDisabled()
