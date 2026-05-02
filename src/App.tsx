@@ -16,17 +16,12 @@ export default function App() {
   const ytContainerRef = useRef<HTMLDivElement | null>(null)
   const yt = useYouTube(ytContainerRef)
   const [selectedGenre, setSelectedGenre] = useState<GenreKey | null>(null)
-  const [soundOn, setSoundOn] = useState(true)
+  const [musicPlaying, setMusicPlaying] = useState(false)
+  const [showGenrePrompt, setShowGenrePrompt] = useState(false)
 
-  const shouldPlayMusic =
-    timer.status === 'running' &&
-    timer.phase === 'focus' &&
-    soundOn &&
-    selectedGenre !== null
-
-  // Sync YouTube playback whenever the music-should-play condition changes
+  // Sync YouTube playback when musicPlaying or selectedGenre changes
   useEffect(() => {
-    if (shouldPlayMusic) {
+    if (musicPlaying && selectedGenre !== null) {
       if (!yt.hasPlayer) {
         yt.initPlayer(GENRES[selectedGenre].videoId, true)
       } else {
@@ -36,9 +31,9 @@ export default function App() {
       yt.pause()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldPlayMusic])
+  }, [musicPlaying, selectedGenre])
 
-  // Switch video when genre changes mid-session (without resetting the timer)
+  // Switch video when genre changes mid-session (without resetting position)
   const prevGenreRef = useRef<GenreKey | null>(selectedGenre)
   useEffect(() => {
     const prev = prevGenreRef.current
@@ -49,13 +44,32 @@ export default function App() {
       yt.pause()
       return
     }
-    yt.switchVideo(GENRES[selectedGenre].videoId, shouldPlayMusic)
+    yt.switchVideo(GENRES[selectedGenre].videoId, musicPlaying)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGenre])
 
+  // Auto-dismiss the genre prompt after 2.5s
+  useEffect(() => {
+    if (!showGenrePrompt) return
+    const id = setTimeout(() => setShowGenrePrompt(false), 2500)
+    return () => clearTimeout(id)
+  }, [showGenrePrompt])
+
+  function handleGenreSelect(genre: GenreKey | null) {
+    setSelectedGenre(genre)
+    if (genre !== null) setShowGenrePrompt(false)
+  }
+
+  function handleSoundToggle() {
+    if (selectedGenre === null) {
+      setShowGenrePrompt(true)
+    } else {
+      setMusicPlaying(p => !p)
+    }
+  }
+
   function handleReset() {
     timer.reset()
-    yt.stop()
   }
 
   return (
@@ -76,7 +90,11 @@ export default function App() {
           Tomo
         </h1>
 
-        <GenrePills selectedGenre={selectedGenre} onSelect={setSelectedGenre} />
+        <GenrePills
+          selectedGenre={selectedGenre}
+          onSelect={handleGenreSelect}
+          highlight={showGenrePrompt}
+        />
 
         <TimerDisplay
           timeLeft={timer.timeLeft}
@@ -92,9 +110,10 @@ export default function App() {
 
         <PhaseControls
           status={timer.status}
-          soundOn={soundOn}
+          musicPlaying={musicPlaying}
+          showGenrePrompt={showGenrePrompt}
           onMainAction={timer.mainAction}
-          onSoundToggle={() => setSoundOn(s => !s)}
+          onSoundToggle={handleSoundToggle}
           onReset={handleReset}
         />
       </main>
