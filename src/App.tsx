@@ -3,6 +3,7 @@ import type { GenreKey } from './types'
 import { useTimer } from './hooks/useTimer'
 import { useTheme } from './hooks/useTheme'
 import { useYouTube } from './hooks/useYouTube'
+import { useNotifications } from './hooks/useNotifications'
 import { GENRES } from './constants'
 import { ThemeToggle } from './components/ThemeToggle'
 import { GenrePills } from './components/GenrePills'
@@ -13,6 +14,7 @@ import { PhaseControls } from './components/PhaseControls'
 export default function App() {
   const { isDark, toggleTheme } = useTheme()
   const timer = useTimer()
+  useNotifications(timer.status)
   const ytContainerRef = useRef<HTMLDivElement | null>(null)
   const yt = useYouTube(ytContainerRef)
   const [selectedGenre, setSelectedGenre] = useState<GenreKey | null>(null)
@@ -47,6 +49,13 @@ export default function App() {
     yt.switchVideo(GENRES[selectedGenre].videoId, musicPlaying)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGenre])
+
+  // Pause music when a phase ends
+  useEffect(() => {
+    if (timer.status === 'waiting_break' || timer.status === 'waiting_focus' || timer.status === 'done') {
+      setMusicPlaying(false)
+    }
+  }, [timer.status])
 
   // Auto-dismiss the genre prompt after 2.5s
   useEffect(() => {

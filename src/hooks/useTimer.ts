@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from 'react'
 import { FOCUS_DURATION, BREAK_DURATION, TOTAL_CYCLES } from '../constants'
 import type { Phase, TimerStatus } from '../types'
+import { formatTime } from '../components/TimerDisplay'
 
 interface TimerState {
   phase: Phase;
@@ -78,6 +79,25 @@ export function useTimer(): UseTimerReturn {
     const id = setInterval(() => dispatch({ type: 'TICK' }), 1000)
     return () => clearInterval(id)
   }, [state.status])
+
+  useEffect(() => {
+    const { status, phase, timeLeft } = state
+    let title: string
+    if (status === 'running') {
+      const label = phase === 'focus' ? 'Focus' : 'Break'
+      title = `${formatTime(timeLeft)} · ${label} — Tomo`
+    } else if (status === 'waiting_break') {
+      title = '⏸ Break ready — Tomo'
+    } else if (status === 'waiting_focus') {
+      title = '⏸ Focus ready — Tomo'
+    } else if (status === 'done') {
+      title = '✓ Done — Tomo'
+    } else {
+      title = 'Tomo'
+    }
+    document.title = title
+    return () => { document.title = 'Tomo' }
+  }, [state.status, state.phase, state.timeLeft])
 
   return {
     ...state,

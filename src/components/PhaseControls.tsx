@@ -58,7 +58,7 @@ export function PhaseControls({
                 : "border border-warm-accent text-warm-accent dark:border-warm-accent dark:text-warm-accent",
             ].join(" ")}
           >
-            {musicPlaying ? <VolumeX size={20} /> : <Volume2 size={20} />}
+            {musicPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
           </button>
 
           {showGenrePrompt && (
