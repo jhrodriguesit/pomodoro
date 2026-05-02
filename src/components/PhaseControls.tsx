@@ -1,4 +1,13 @@
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react'
+import type { TimerStatus } from '../types'
+
+interface PhaseControlsProps {
+  status: TimerStatus
+  soundOn: boolean
+  onMainAction: () => void
+  onSoundToggle: () => void
+  onReset: () => void
+}
 
 const MAIN_BUTTON_CONFIG = {
   idle:          { label: 'Start Focus',     ariaLabel: 'Start Focus',     disabled: false },
@@ -7,9 +16,13 @@ const MAIN_BUTTON_CONFIG = {
   waiting_break: { label: 'Start Break',     ariaLabel: 'Start Break',     disabled: false },
   waiting_focus: { label: 'Start Focus',     ariaLabel: 'Start Focus',     disabled: false },
   done:          { label: null,              ariaLabel: 'Session complete', disabled: true  },
+} as const satisfies Record<TimerStatus, { label: string | null; ariaLabel: string; disabled: boolean }>
+
+interface MainButtonContentProps {
+  status: TimerStatus
 }
 
-function MainButtonContent({ status }) {
+function MainButtonContent({ status }: MainButtonContentProps) {
   if (status === 'running') return <Pause size={20} />
   if (status === 'paused')  return <Play size={20} />
   if (status === 'done')    return <span className="text-sm">—</span>
@@ -24,7 +37,7 @@ function MainButtonContent({ status }) {
   return <span>{MAIN_BUTTON_CONFIG[status].label}</span>
 }
 
-export function PhaseControls({ status, soundOn, onMainAction, onSoundToggle, onReset }) {
+export function PhaseControls({ status, soundOn, onMainAction, onSoundToggle, onReset }: PhaseControlsProps) {
   const config = MAIN_BUTTON_CONFIG[status]
 
   return (
