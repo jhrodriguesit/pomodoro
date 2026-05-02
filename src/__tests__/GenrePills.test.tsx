@@ -39,4 +39,18 @@ describe('GenrePills', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Classical' }))
     expect(onSelect).toHaveBeenCalledWith(null)
   })
+
+  it('applies highlight animation when highlight is true', () => {
+    const { container } = render(
+      <GenrePills selectedGenre={null} onSelect={() => {}} highlight={true} />
+    )
+    expect(container.firstChild).toHaveClass('animate-pulse')
+  })
+
+  it('does not apply highlight animation by default', () => {
+    const { container } = render(
+      <GenrePills selectedGenre={null} onSelect={() => {}} />
+    )
+    expect(container.firstChild).not.toHaveClass('animate-pulse')
+  })
 })

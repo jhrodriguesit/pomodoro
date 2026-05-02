@@ -4,11 +4,19 @@ import type { GenreKey } from '../types'
 interface GenrePillsProps {
   selectedGenre: GenreKey | null
   onSelect: (genre: GenreKey | null) => void
+  highlight?: boolean
 }
 
-export function GenrePills({ selectedGenre, onSelect }: GenrePillsProps) {
+export function GenrePills({ selectedGenre, onSelect, highlight = false }: GenrePillsProps) {
   return (
-    <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Music genre">
+    <div
+      className={[
+        'flex flex-wrap justify-center gap-2 rounded-full transition-all',
+        highlight ? 'animate-pulse ring-2 ring-warm-accent ring-offset-2 ring-offset-warm-bg dark:ring-offset-warm-dark-bg' : '',
+      ].join(' ')}
+      role="group"
+      aria-label="Music genre"
+    >
       {GENRE_ORDER.map(id => {
         const isSelected = selectedGenre === id
         return (
