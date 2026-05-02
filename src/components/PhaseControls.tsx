@@ -34,10 +34,6 @@ const MAIN_BUTTON_CONFIG = {
   { label: string | null; ariaLabel: string; disabled: boolean }
 >;
 
-interface MainButtonContentProps {
-  status: TimerStatus;
-}
-
 export function PhaseControls({
   status,
   musicPlaying,
@@ -62,7 +58,7 @@ export function PhaseControls({
                 : "border border-warm-accent text-warm-accent dark:border-warm-accent dark:text-warm-accent",
             ].join(" ")}
           >
-            {musicPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            {musicPlaying ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>
 
           {showGenrePrompt && (
