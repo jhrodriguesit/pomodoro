@@ -1,5 +1,5 @@
 import { useReducer, useEffect } from 'react'
-import { FOCUS_DURATION, BREAK_DURATION } from '../constants'
+import { FOCUS_DURATION, BREAK_DURATION, TOTAL_CYCLES } from '../constants'
 import type { Phase, TimerStatus } from '../types'
 
 interface TimerState {
@@ -13,6 +13,15 @@ type TimerAction =
   | { type: 'MAIN_ACTION' }
   | { type: 'TICK' }
   | { type: 'RESET' };
+
+export type UseTimerReturn = {
+  phase: Phase;
+  cycleIndex: number;
+  timeLeft: number;
+  status: TimerStatus;
+  mainAction: () => void;
+  reset: () => void;
+};
 
 const initialState: TimerState = {
   phase: 'focus',
@@ -55,20 +64,13 @@ function handleTick(state: TimerState): TimerState {
   if (state.status !== 'running') return state
   if (state.timeLeft > 1) return { ...state, timeLeft: state.timeLeft - 1 }
   if (state.phase === 'focus') {
-    if (state.cycleIndex >= 3) return { ...state, timeLeft: 0, status: 'done' }
+    if (state.cycleIndex >= TOTAL_CYCLES - 1) return { ...state, timeLeft: 0, status: 'done' }
     return { ...state, timeLeft: 0, status: 'waiting_break' }
   }
   return { ...state, timeLeft: 0, status: 'waiting_focus' }
 }
 
-export function useTimer(): {
-  phase: Phase;
-  cycleIndex: number;
-  timeLeft: number;
-  status: TimerStatus;
-  mainAction: () => void;
-  reset: () => void;
-} {
+export function useTimer(): UseTimerReturn {
   const [state, dispatch] = useReducer(timerReducer, initialState)
 
   useEffect(() => {
