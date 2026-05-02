@@ -108,7 +108,7 @@ export default function App() {
 
       <main className="flex flex-col items-center gap-10 px-4 pb-16 pt-4 sm:pt-8">
         <h1 className="font-serif text-3xl sm:text-4xl font-medium text-warm-text dark:text-warm-dark-text tracking-wide">
-          Tomo
+          Pomodoro
         </h1>
 
         <GenrePills

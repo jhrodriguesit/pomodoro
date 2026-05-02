@@ -97,20 +97,20 @@ export function useTimer(settings: Settings): UseTimerReturn {
     let title: string
     if (status === 'running') {
       const label = phase === 'focus' ? 'Focus' : phase === 'long_break' ? 'Long break' : 'Break'
-      title = `${formatTime(timeLeft)} · ${label} — Tomo`
+      title = `${formatTime(timeLeft)} · ${label} — Pomodoro`
     } else if (status === 'waiting_break') {
-      title = '⏸ Break ready — Tomo'
+      title = '⏸ Break ready — Pomodoro'
     } else if (status === 'waiting_focus') {
-      title = '⏸ Focus ready — Tomo'
+      title = '⏸ Focus ready — Pomodoro'
     } else if (status === 'waiting_long_break') {
-      title = '⏸ Long break ready — Tomo'
+      title = '⏸ Long break ready — Pomodoro'
     } else if (status === 'done') {
-      title = '✓ Done — Tomo'
+      title = '✓ Done — Pomodoro'
     } else {
-      title = 'Tomo'
+      title = 'Pomodoro'
     }
     document.title = title
-    return () => { document.title = 'Tomo' }
+    return () => { document.title = 'Pomodoro' }
   }, [state.status, state.phase, state.timeLeft])
 
   return {

@@ -19,7 +19,7 @@ export const DEFAULT_SETTINGS: Settings = {
   chimeOnPhaseEnd: true,
 }
 
-export const LS_SETTINGS_KEY = 'tomo-settings'
+export const LS_SETTINGS_KEY = 'pomodoro-settings'
 
 export const FOCUS_MIN_MIN = 1
 export const FOCUS_MIN_MAX = 120

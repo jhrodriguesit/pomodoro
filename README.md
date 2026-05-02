@@ -1,4 +1,4 @@
-# Tomo
+# Pomodoro
 
 A minimal, warm-themed Pomodoro timer for the browser. Focus in cycles, take breaks, optionally play lo-fi music in the background, and end your session with a long break.
 
