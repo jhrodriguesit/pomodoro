@@ -6,7 +6,8 @@ import { PhaseControls } from '../components/PhaseControls'
 
 const defaultProps: ComponentProps<typeof PhaseControls> = {
   status: 'idle',
-  soundOn: true,
+  musicPlaying: false,
+  showGenrePrompt: false,
   onMainAction: () => {},
   onSoundToggle: () => {},
   onReset: () => {},
@@ -53,14 +54,14 @@ describe('PhaseControls', () => {
     expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument()
   })
 
-  it('sound toggle shows mute label when soundOn is true', () => {
-    render(<PhaseControls {...defaultProps} soundOn={true} />)
-    expect(screen.getByRole('button', { name: /mute/i })).toBeInTheDocument()
+  it('shows "Pause music" label when musicPlaying is true', () => {
+    render(<PhaseControls {...defaultProps} musicPlaying={true} />)
+    expect(screen.getByRole('button', { name: /pause music/i })).toBeInTheDocument()
   })
 
-  it('sound toggle shows unmute label when soundOn is false', () => {
-    render(<PhaseControls {...defaultProps} soundOn={false} />)
-    expect(screen.getByRole('button', { name: /unmute/i })).toBeInTheDocument()
+  it('shows "Play music" label when musicPlaying is false', () => {
+    render(<PhaseControls {...defaultProps} musicPlaying={false} />)
+    expect(screen.getByRole('button', { name: /play music/i })).toBeInTheDocument()
   })
 
   it('calls onMainAction when main button is clicked', async () => {
@@ -70,10 +71,10 @@ describe('PhaseControls', () => {
     expect(onMainAction).toHaveBeenCalledOnce()
   })
 
-  it('calls onSoundToggle when sound button is clicked', async () => {
+  it('calls onSoundToggle when music button is clicked', async () => {
     const onSoundToggle = vi.fn()
     render(<PhaseControls {...defaultProps} onSoundToggle={onSoundToggle} />)
-    await userEvent.click(screen.getByRole('button', { name: /mute/i }))
+    await userEvent.click(screen.getByRole('button', { name: /play music/i }))
     expect(onSoundToggle).toHaveBeenCalledOnce()
   })
 
@@ -82,5 +83,15 @@ describe('PhaseControls', () => {
     render(<PhaseControls {...defaultProps} status="running" onReset={onReset} />)
     await userEvent.click(screen.getByRole('button', { name: /reset/i }))
     expect(onReset).toHaveBeenCalledOnce()
+  })
+
+  it('shows genre prompt tooltip when showGenrePrompt is true', () => {
+    render(<PhaseControls {...defaultProps} showGenrePrompt={true} />)
+    expect(screen.getByText(/pick a genre to play music/i)).toBeInTheDocument()
+  })
+
+  it('hides genre prompt tooltip when showGenrePrompt is false', () => {
+    render(<PhaseControls {...defaultProps} showGenrePrompt={false} />)
+    expect(screen.queryByText(/pick a genre to play music/i)).not.toBeInTheDocument()
   })
 })
