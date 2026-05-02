@@ -2,8 +2,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import { PhaseControls } from '../components/PhaseControls'
+import type { TimerStatus } from '../types'
 
-const defaultProps = {
+const defaultProps: { status: TimerStatus; soundOn: boolean; onMainAction: () => void; onSoundToggle: () => void; onReset: () => void } = {
   status: 'idle',
   soundOn: true,
   onMainAction: () => {},
